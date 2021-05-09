@@ -13,6 +13,7 @@ Deno.test("parse audio line", () => {
   assertEquals(result.extension, "webm");
   assertEquals(result.resolution, "audio only tiny 48k");
   assertEquals(result.audioOnly, true);
+  assertEquals(result.size, 48);
 });
 
 Deno.test("parse video line, video only", () => {
@@ -26,7 +27,8 @@ Deno.test("parse video line, video only", () => {
   assertEquals(result.code, "244");
   assertEquals(result.extension, "webm");
   assertEquals(result.resolution, "854x480 480p 351k");
-  assertEquals(result.videoOnly, true);
+  assertEquals(result.audioOnly, false);
+  assertEquals(result.size, 480);
 });
 
 Deno.test("parse video line, video only is false", () => {
@@ -40,5 +42,6 @@ Deno.test("parse video line, video only is false", () => {
   assertEquals(result.code, "22");
   assertEquals(result.extension, "mp4");
   assertEquals(result.resolution, "1280x720 720p 928k");
-  assertEquals(result.videoOnly, false);
+  assertEquals(result.audioOnly, false);
+  assertEquals(result.size, 720);
 });
