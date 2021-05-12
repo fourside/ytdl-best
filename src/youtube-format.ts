@@ -1,6 +1,6 @@
 export class YoutubeFormat {
-  public readonly audioOnly: boolean;
   public readonly size: number;
+  private readonly audioOnly: boolean;
 
   constructor(
     public readonly code: string,
@@ -17,18 +17,30 @@ export class YoutubeFormat {
     }
     this.size = parseInt(result.groups["size"]);
   }
+
+  compare(other: YoutubeFormat): number {
+    return this.size - other.size;
+  }
+
+  isAudio(): boolean {
+    return this.audioOnly && this.extension === "m4a";
+  }
+
+  isVideo(): boolean {
+    return !this.audioOnly && this.extension === "mp4";
+  }
 }
 
 const videoSizePattern = new RegExp(/^.+? (?<size>\d+)p .+$/, "u");
 const audioSizePattern = new RegExp(/^audio only tiny (?<size>\d+)k$/);
 
-const pattern = new RegExp(
+export const formatPattern = new RegExp(
   "^(?<code>.+?) +(?<extension>.+?) +(?<resolution>.+?) , +(?<note>.+)$",
   "u",
 );
 
 export function parse(line: string): YoutubeFormat {
-  const result = pattern.exec(line);
+  const result = formatPattern.exec(line);
   if (result === null) {
     throw new Error(`fail to parse: ${line}`);
   }
@@ -41,4 +53,18 @@ export function parse(line: string): YoutubeFormat {
   const note = result.groups["note"];
 
   return new YoutubeFormat(code, extension, resolution, note);
+}
+
+export function chooseBestCodes(
+  videoFormats: YoutubeFormat[],
+  audioFormats: YoutubeFormat[],
+): [string, string] {
+  const video = chooseBest(videoFormats);
+  const audio = chooseBest(audioFormats);
+  return [video.code, audio.code];
+}
+
+function chooseBest(formats: YoutubeFormat[]): YoutubeFormat {
+  const sorted = formats.slice().sort((a, b) => a.compare(b));
+  return sorted[0];
 }
