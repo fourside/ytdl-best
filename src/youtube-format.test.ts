@@ -1,7 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { parse } from "./youtube-format.ts";
 
-Deno.test("parse audio line", () => {
+Deno.test("parse audio line webm", () => {
   // arrange
   const line =
     "249          webm       audio only tiny   48k , webm_dash container, opus @ 48k (48000Hz), 3.25MiB";
@@ -12,11 +12,28 @@ Deno.test("parse audio line", () => {
   assertEquals(result.code, "249");
   assertEquals(result.extension, "webm");
   assertEquals(result.resolution, "audio only tiny 48k");
-  assertEquals(result.audioOnly, true);
+  assertEquals(result.isAudio(), false);
+  assertEquals(result.isVideo(), false);
   assertEquals(result.size, 48);
 });
 
-Deno.test("parse video line, video only", () => {
+Deno.test("parse audio line m4a", () => {
+  // arrange
+  const line =
+    "140          m4a        audio only tiny  129k , m4a_dash container, mp4a.40.2@129k (44100Hz), 7.45MiB";
+  // act
+  const result = parse(line);
+
+  // assert
+  assertEquals(result.code, "140");
+  assertEquals(result.extension, "m4a");
+  assertEquals(result.resolution, "audio only tiny 129k");
+  assertEquals(result.isAudio(), true);
+  assertEquals(result.isVideo(), false);
+  assertEquals(result.size, 129);
+});
+
+Deno.test("parse video line webm, video only", () => {
   // arrange
   const line =
     "244          webm       854x480    480p  351k , webm_dash container, vp9@ 351k, 30fps, video only, 23.56MiB";
@@ -27,7 +44,24 @@ Deno.test("parse video line, video only", () => {
   assertEquals(result.code, "244");
   assertEquals(result.extension, "webm");
   assertEquals(result.resolution, "854x480 480p 351k");
-  assertEquals(result.audioOnly, false);
+  assertEquals(result.isAudio(), false);
+  assertEquals(result.isVideo(), false);
+  assertEquals(result.size, 480);
+});
+
+Deno.test("parse video line mp4, video only", () => {
+  // arrange
+  const line =
+    "135          mp4        854x480    480p  844k , mp4_dash container, avc1.4d401f@ 844k, 30fps, video only, 48.56MiB";
+  // act
+  const result = parse(line);
+
+  // assert
+  assertEquals(result.code, "135");
+  assertEquals(result.extension, "mp4");
+  assertEquals(result.resolution, "854x480 480p 844k");
+  assertEquals(result.isAudio(), false);
+  assertEquals(result.isVideo(), true);
   assertEquals(result.size, 480);
 });
 
@@ -42,6 +76,7 @@ Deno.test("parse video line, video only is false", () => {
   assertEquals(result.code, "22");
   assertEquals(result.extension, "mp4");
   assertEquals(result.resolution, "1280x720 720p 928k");
-  assertEquals(result.audioOnly, false);
+  assertEquals(result.isAudio(), false);
+  assertEquals(result.isVideo(), true);
   assertEquals(result.size, 720);
 });
