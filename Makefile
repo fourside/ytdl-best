@@ -1,3 +1,5 @@
+.PHONY: setup clean test lint fmt
+
 NAME := ytdl-best
 ENTRY_POINT := src/main.ts
 
@@ -7,7 +9,7 @@ endif
 
 .DEFAULT_GOAL: $(NAME)
 
-${NAME}: clean setup lint test
+${NAME}: clean setup
 	deno compile --unstable --allow-run --lite --output bin/${NAME}${EXT} ${ENTRY_POINT}
 	deno compile --unstable --allow-run --lite --output bin/${NAME}${EXT} --target x86_64-pc-windows-msvc ${ENTRY_POINT}
 
@@ -26,5 +28,3 @@ lint:
 
 fmt:
 	deno fmt
-
-.PHONY: setup compile clean test lint fmt
