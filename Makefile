@@ -12,6 +12,7 @@ ${NAME}: clean setup lint test
 	deno compile --unstable --allow-run --lite --output bin/${NAME}${EXT} --target x86_64-pc-windows-msvc ${ENTRY_POINT}
 
 setup: clean
+	git config --local core.hooksPath githooks
 	mkdir bin
 
 clean:
