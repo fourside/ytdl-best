@@ -19,7 +19,7 @@ export class YoutubeFormat {
   }
 
   compare(other: YoutubeFormat): number {
-    return this.size - other.size;
+    return other.size - this.size;
   }
 
   isAudio(): boolean {

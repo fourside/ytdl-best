@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { parse } from "./youtube-format.ts";
+import { parse, YoutubeFormat } from "./youtube-format.ts";
 
 Deno.test("parse audio line webm", () => {
   // arrange
@@ -79,4 +79,20 @@ Deno.test("parse video line, video only is false", () => {
   assertEquals(result.isAudio(), false);
   assertEquals(result.isVideo(), true);
   assertEquals(result.size, 720);
+});
+
+Deno.test("compare to sort desc", () => {
+  // arrange
+  const formats = [
+    new YoutubeFormat("1", "mp4", "a 8p a", ""),
+    new YoutubeFormat("2", "mp4", "a 7p a", ""),
+    new YoutubeFormat("3", "mp4", "a 9p a", ""),
+  ];
+  // act
+  const result = formats.slice().sort((a, b) => a.compare(b));
+
+  // assert
+  assertEquals(result[0].code, "3");
+  assertEquals(result[1].code, "1");
+  assertEquals(result[2].code, "2");
 });
