@@ -24,7 +24,7 @@ test:
 	deno test
 
 lint:
-	deno lint --unstable
+	deno lint
 
 fmt:
 	deno fmt
