@@ -15,4 +15,4 @@ typescript 4.2.2
 
 ## usage
 
-- `deno run --allow-run src/mod.ts ${url}`
+- `deno run --allow-run --import-map import_map.json src/mod.ts ${url}`
