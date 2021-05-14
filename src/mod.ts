@@ -1,11 +1,8 @@
 import { YoutubeDl } from "./youtube_dl.ts";
 import { chooseBestCodes, parse } from "./youtube_format.ts";
+import { parseArgs } from "./cli.ts";
 
-if (Deno.args.length !== 1) {
-  console.log("[ytdl-best] pass one args");
-  Deno.exit(-1);
-}
-const url = Deno.args[0];
+const url = parseArgs(Deno.args);
 try {
   const youtubeDl = new YoutubeDl(url);
   const detect = await youtubeDl.detectPrerequisite();
