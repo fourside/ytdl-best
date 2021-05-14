@@ -1,5 +1,5 @@
-import { YoutubeDl } from "./youtube-dl.ts";
-import { chooseBestCodes, parse } from "./youtube-format.ts";
+import { YoutubeDl } from "./youtube_dl.ts";
+import { chooseBestCodes, parse } from "./youtube_format.ts";
 
 if (Deno.args.length !== 1) {
   console.log("[ytdl-best] pass one args");

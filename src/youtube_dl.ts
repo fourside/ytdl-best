@@ -1,4 +1,4 @@
-import { formatPattern } from "./youtube-format.ts";
+import { formatPattern } from "./youtube_format.ts";
 
 export class YoutubeDl {
   constructor(private readonly url: string) {}

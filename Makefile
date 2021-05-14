@@ -1,7 +1,7 @@
 .PHONY: setup clean test lint fmt
 
 NAME := ytdl-best
-ENTRY_POINT := src/main.ts
+ENTRY_POINT := src/cli.ts
 
 ifeq ($(OS),Windows_NT)
 	EXT = .exe
