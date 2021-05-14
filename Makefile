@@ -21,7 +21,7 @@ clean:
 	rm -rf ./bin
 
 test:
-	deno test
+	deno test --import-map import_map.json
 
 lint:
 	deno lint
