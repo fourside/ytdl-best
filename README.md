@@ -15,4 +15,4 @@ typescript 4.2.2
 
 ## usage
 
-- `deno run --allow-run src/main.ts ${url}`
+- `deno run --allow-run src/mod.ts ${url}`
