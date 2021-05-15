@@ -2,9 +2,13 @@ import { YoutubeDl } from "./youtube_dl.ts";
 import { chooseBestCodes, parse } from "./youtube_format.ts";
 import { parseArgs } from "./cli.ts";
 
-const url = parseArgs(Deno.args);
+const result = parseArgs(Deno.args);
+if (result.exit) {
+  Deno.exit(result.exitCode);
+}
+
 try {
-  const youtubeDl = new YoutubeDl(url);
+  const youtubeDl = new YoutubeDl(result.url);
   const detect = await youtubeDl.detectPrerequisite();
   if (!detect.success) {
     console.log(detect.message);
