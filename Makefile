@@ -21,7 +21,10 @@ clean:
 	rm -rf ./bin
 
 test:
-	deno test --import-map import_map.json
+	deno test --import-map import_map.json --coverage=./cov
+
+coverage:
+	deno coverage cov
 
 lint:
 	deno lint
