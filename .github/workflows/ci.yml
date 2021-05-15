@@ -29,6 +29,7 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v1
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           name: ${{ matrix.os }}-${{ matrix.deno }}
           files: cov.lcov
 
