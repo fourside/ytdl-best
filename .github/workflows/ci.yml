@@ -23,5 +23,14 @@ jobs:
       - name: Run tests
         run: make test
 
+      - name: Generate lcov
+        run: deno coverage --lcov ./cov > cov.lcov
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          name: ${{ matrix.os }}-${{ matrix.deno }}
+          files: cov.lcov
+
       - name: Run build
         run: make
