@@ -8,6 +8,7 @@ type ReturnValue = {
 } | {
   exit: false;
   url: string;
+  cookies?: string;
 };
 
 export function parseArgs(args: string[]): ReturnValue {
@@ -24,10 +25,13 @@ export function parseArgs(args: string[]): ReturnValue {
     console.error("usage: ytdl-best ${url}");
     return { exit: true, exitCode: -1 };
   }
+
+  const cookies = parsed.cookies ?? undefined;
+
   const arg = parsed._[0] + "";
   if (!/^http/.test(arg)) {
     console.error("pass url as args:", arg);
     return { exit: true, exitCode: -1 };
   }
-  return { exit: false, url: arg };
+  return { exit: false, url: arg, cookies };
 }

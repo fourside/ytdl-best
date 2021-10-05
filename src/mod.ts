@@ -9,7 +9,7 @@ export async function main(args: string[]) {
   }
 
   try {
-    const youtubeDl = new YoutubeDl(result.url);
+    const youtubeDl = new YoutubeDl(result.url, result.cookies);
     const detect = await youtubeDl.detectPrerequisite();
     if (!detect.success) {
       console.log(detect.message);

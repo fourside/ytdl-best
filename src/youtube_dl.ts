@@ -1,7 +1,10 @@
 import { formatPattern } from "./youtube_format.ts";
 
 export class YoutubeDl {
-  constructor(private readonly url: string) {}
+  constructor(
+    private readonly url: string,
+    private readonly cookies?: string,
+  ) {}
 
   async detectPrerequisite(): Promise<
     { success: false; message: string } | { success: true }
@@ -20,11 +23,11 @@ export class YoutubeDl {
   }
 
   async listFormat(): Promise<string[]> {
-    const { status, stdout, stderr } = await runPipedProcess([
-      "youtube-dl",
-      "--list-format",
-      this.url,
-    ]);
+    const command = ["youtube-dl", "--list-format", this.url];
+    if (this.cookies) {
+      command.splice(1, 0, "--cookies", this.cookies);
+    }
+    const { status, stdout, stderr } = await runPipedProcess(command);
 
     if (!status.success) {
       throw new Error(
@@ -41,12 +44,11 @@ export class YoutubeDl {
   }
 
   async download(videoCode: string, audioCode: string): Promise<void> {
-    const { status } = await runProcess([
-      "youtube-dl",
-      "-f",
-      `${videoCode}+${audioCode}`,
-      this.url,
-    ], false);
+    const command = ["youtube-dl", "-f", `${videoCode}+${audioCode}`, this.url];
+    if (this.cookies) {
+      command.splice(1, 0, "--cookies", this.cookies);
+    }
+    const { status } = await runProcess(command, false);
     if (!status.success) {
       throw new Error(
         `download error. status: ${status.code}`,
