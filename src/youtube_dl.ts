@@ -1,5 +1,4 @@
-import { formatPattern } from "./youtube_format.ts";
-
+const mainCommand = "yt-dlp";
 export class YoutubeDl {
   constructor(
     private readonly url: string,
@@ -10,11 +9,11 @@ export class YoutubeDl {
     { success: false; message: string } | { success: true }
   > {
     const [youtubeDl, ffmpeg] = await Promise.all([
-      runProcess(["youtube-dl", "--version"], true),
+      runProcess([mainCommand, "--version"], true),
       runProcess(["ffmpeg", "-version"], true),
     ]);
     if (!youtubeDl.status.success) {
-      return { success: false, message: "youtube-dl is not in PATH." };
+      return { success: false, message: `${mainCommand} is not in PATH.` };
     }
     if (!ffmpeg.status.success) {
       return { success: false, message: "ffmpeg is not in PATH." };
@@ -23,11 +22,11 @@ export class YoutubeDl {
   }
 
   async listFormat(): Promise<string[]> {
-    const command = ["youtube-dl", "--list-format", this.url];
+    const listCommand = [mainCommand, "--list-formats", this.url];
     if (this.cookies) {
-      command.splice(1, 0, "--cookies", this.cookies);
+      listCommand.splice(1, 0, "--cookies", this.cookies);
     }
-    const { status, stdout, stderr } = await runPipedProcess(command);
+    const { status, stdout, stderr } = await runPipedProcess(listCommand);
 
     if (!status.success) {
       throw new Error(
@@ -38,17 +37,23 @@ export class YoutubeDl {
     }
 
     const stdoutLines = new TextDecoder().decode(stdout).split("\n");
-    return stdoutLines.filter((line) => {
-      return formatPattern.test(line);
-    });
+    const borderIndex = stdoutLines.findIndex((line) =>
+      line.includes("-------------------")
+    );
+    return stdoutLines.slice(borderIndex + 1).filter((line) => line.length > 0);
   }
 
   async download(videoCode: string, audioCode: string): Promise<void> {
-    const command = ["youtube-dl", "-f", `${videoCode}+${audioCode}`, this.url];
+    const downloadCommand = [
+      mainCommand,
+      "-f",
+      `${videoCode}+${audioCode}`,
+      this.url,
+    ];
     if (this.cookies) {
-      command.splice(1, 0, "--cookies", this.cookies);
+      downloadCommand.splice(1, 0, "--cookies", this.cookies);
     }
-    const { status } = await runProcess(command, false);
+    const { status } = await runProcess(downloadCommand, false);
     if (!status.success) {
       throw new Error(
         `download error. status: ${status.code}`,

@@ -1,5 +1,10 @@
 import { YoutubeDl } from "./youtube_dl.ts";
-import { chooseBestCodes, parse } from "./youtube_format.ts";
+import {
+  chooseBestId,
+  isAudioFormat,
+  isVideoFormat,
+  parse,
+} from "./youtube_format.ts";
 import { parseArgs } from "./cli.ts";
 
 export async function main(args: string[]) {
@@ -19,22 +24,27 @@ export async function main(args: string[]) {
     console.info(listFormat);
     const youtubeFormats = listFormat.map((format) => parse(format));
 
-    const videoFormats = youtubeFormats.filter((format) => format.isVideo());
+    const videoFormats = youtubeFormats.filter(isVideoFormat).filter((format) =>
+      format.extension === "mp4"
+    );
     if (videoFormats.length === 0) {
       console.log("[ytdl-best] no video format");
       Deno.exit(-1);
     }
-    const audioFormats = youtubeFormats.filter((format) => format.isAudio());
+    const audioFormats = youtubeFormats.filter(isAudioFormat).filter((format) =>
+      format.extension === "m4a"
+    );
     if (audioFormats.length === 0) {
       console.log("[ytdl-best] no audio format");
       Deno.exit(-1);
     }
-    const [videoCode, audioCode] = chooseBestCodes(videoFormats, audioFormats);
+    const bestVideoId = chooseBestId(videoFormats);
+    const bestAudioId = chooseBestId(audioFormats);
     console.log(
-      `[ytdl-best] best video: ${videoCode}, best audio: ${audioCode}`,
+      `[ytdl-best] best video: ${bestVideoId}, best audio: ${bestAudioId}`,
     );
 
-    await youtubeDl.download(videoCode, audioCode);
+    await youtubeDl.download(bestVideoId, bestAudioId);
     console.log("[ytdl-best] Done! :tada:");
   } catch (error) {
     console.error("[ytdl-best]", error);

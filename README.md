@@ -3,7 +3,7 @@
 ## prerequisite
 
 - deno
-- youtube-dl
+- yt-dlp
 - ffmpeg
 
 ```bash
