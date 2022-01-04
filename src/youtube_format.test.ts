@@ -176,7 +176,7 @@ Deno.test("chooseBestId", () => {
       abr: undefined,
       asr: undefined,
       vbr: "300k",
-      fileSize: "27.15MiB",
+      fileSize: "27.15KiB",
       audioCodec: "video only",
       videoCodec: "avc1.4d401e",
       moreInfo: "",
