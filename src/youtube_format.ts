@@ -157,6 +157,9 @@ function compareFileSize(aFileSize: string, bFileSize: string): number {
 }
 
 function convertFileSizeString(fileSizeString: string): number {
+  if (/KiB$/.test(fileSizeString)) {
+    return parseFloat(fileSizeString.replace("KiB", "")) * 1024;
+  }
   if (/MiB$/.test(fileSizeString)) {
     return parseFloat(fileSizeString.replace("MiB", "")) * 1024 * 1024;
   }
