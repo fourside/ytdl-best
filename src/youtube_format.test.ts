@@ -24,7 +24,7 @@ Deno.test("parse audio line webm", () => {
 Deno.test("parse audio line m4a", () => {
   // arrange
   const line =
-    "140 m4a                  |   10.63MiB   129k https | audio only         mp4a.40.2  129k 44100Hz medium, m4a_dash";
+    "140 m4a   audio only     |   10.63MiB   129k https | audio only         mp4a.40.2  129k 44100Hz medium, m4a_dash";
   // act
   const result = parse(line);
 
