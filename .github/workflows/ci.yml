@@ -12,7 +12,7 @@ jobs:
       - name: Setup
         uses: denoland/setup-deno@main
         with:
-          deno-version: "1.17.1"
+          deno-version: "1.25.1"
 
       - name: Run fmt
         run: deno fmt --check

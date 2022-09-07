@@ -8,9 +8,9 @@
 
 ```bash
 $ deno --version
-deno 1.17.1 (release, x86_64-unknown-linux-gnu)
-v8 9.7.106.15
-typescript 4.5.2
+deno 1.25.1 (release, x86_64-unknown-linux-gnu)
+v8 10.6.194.5
+typescript 4.7.4
 ```
 
 ## usage
