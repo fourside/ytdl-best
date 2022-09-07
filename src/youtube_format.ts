@@ -112,19 +112,19 @@ export function parse(line: string): YoutubeFormat | ImageFormat {
 }
 
 const videoPattern = new RegExp(
-  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +(?<ch>\d+?) +│ +~? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +│ (?<vcodec>.+?) +(?<vbr>.+?) +(?<acodec>.+?) +(?<abr>.+?)? +(?<asr>.+?)? +(?<more_info>.+)$/,
+  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +(?<ch>\d+?) +\| +~? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +\| (?<vcodec>.+?) +(?<vbr>.+?) +(?<acodec>.+?) +(?<abr>.+?)? +(?<asr>.+?)? +(?<more_info>.+)$/,
 );
 
 const videoOnlyPattern = new RegExp(
-  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +│ +~? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +│ (?<vcodec>.+?) +(?<vbr>.+?) +video only +(?<more_info>.+)$/,
+  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +\| +~? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +\| (?<vcodec>.+?) +(?<vbr>.+?) +video only +(?<more_info>.+)$/,
 );
 
 const audioOnlyPattern = new RegExp(
-  /^(?<id>\w+) +(?<ext>\w+)(:? +audio only)? +(?<ch>\d+?) +│ +(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +│ audio only +(?<acodec>.+?) +(?<abr>.+?) +(?<asr>.+?) +(?<more_info>.+)$/,
+  /^(?<id>\w+) +(?<ext>\w+)(:? +audio only)? +(?<ch>\d+?) +\| +(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +\| audio only +(?<acodec>.+?) +(?<abr>.+?) +(?<asr>.+?) +(?<more_info>.+)$/,
 );
 
 const imagePattern = new RegExp(
-  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +│ +(?<proto>\w+) +│ +images +?(?<more_info>.+)$/,
+  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +\| +(?<proto>\w+) +\| +images +?(?<more_info>.+)$/,
 );
 
 export function isAudioFormat(format: YoutubeFormat): format is AudioFormat {

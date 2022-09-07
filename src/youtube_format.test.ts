@@ -4,7 +4,7 @@ import { chooseBestId, parse, YoutubeFormat } from "./youtube_format.ts";
 Deno.test("parse audio line webm", () => {
   // arrange
   const line =
-    "249 webm audio only      2 │  754.19KiB    50k https │ audio only         opus        50k 48k low, webm_dash";
+    "249 webm audio only      2 |  754.19KiB    50k https | audio only         opus        50k 48k low, webm_dash";
   // act
   const result = parse(line);
 
@@ -24,7 +24,7 @@ Deno.test("parse audio line webm", () => {
 Deno.test("parse audio line m4a", () => {
   // arrange
   const line =
-    "139 m4a   audio only      2 │  722.92KiB   49k https │ audio only          mp4a.40.5   49k 22k low, m4a_dash";
+    "139 m4a   audio only      2 |  722.92KiB   49k https | audio only          mp4a.40.5   49k 22k low, m4a_dash";
   // act
   const result = parse(line);
 
@@ -44,7 +44,7 @@ Deno.test("parse audio line m4a", () => {
 Deno.test("parse video line webm, video only", () => {
   // arrange
   const line =
-    "278 webm  256x144     30    │    1.26MiB   87k https │ vp9             87k video only          144p, webm_dash";
+    "278 webm  256x144     30    |    1.26MiB   87k https | vp9             87k video only          144p, webm_dash";
   // act
   const result = parse(line);
 
@@ -68,7 +68,7 @@ Deno.test("parse video line webm, video only", () => {
 Deno.test("parse video line mp4, video only", () => {
   // arrange
   const line =
-    "135 mp4   854x480     30    │    2.23MiB  155k https │ avc1.4d401f    155k video only          480p, mp4_dash";
+    "135 mp4   854x480     30    |    2.23MiB  155k https | avc1.4d401f    155k video only          480p, mp4_dash";
   // act
   const result = parse(line);
 
@@ -92,7 +92,7 @@ Deno.test("parse video line mp4, video only", () => {
 Deno.test("parse video line, not video only", () => {
   // arrange
   const line =
-    "22  mp4   1280x720    30  2 │ ~ 10.99MiB  744k https │ avc1.64001F    744k mp4a.40.2    0k 44k 720p";
+    "22  mp4   1280x720    30  2 | ~ 10.99MiB  744k https | avc1.64001F    744k mp4a.40.2    0k 44k 720p";
   // act
   const result = parse(line);
 
@@ -116,7 +116,7 @@ Deno.test("parse video line, not video only", () => {
 Deno.test("parse image line", () => {
   // arrange
   const line =
-    "sb0 mhtml 160x90       1    │                  mhtml │ images                                  storyboard";
+    "sb0 mhtml 160x90       1    |                  mhtml | images                                  storyboard";
   // act
   const result = parse(line);
 
