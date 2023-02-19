@@ -8,11 +8,11 @@
 
 ```bash
 $ deno --version
-deno 1.25.1 (release, x86_64-unknown-linux-gnu)
-v8 10.6.194.5
-typescript 4.7.4
+deno 1.30.3 (release, x86_64-unknown-linux-gnu)
+v8 10.9.194.5
+typescript 4.9.4
 ```
 
 ## usage
 
-- `deno run --allow-run --import-map import_map.json src/mod.ts ${url}`
+- `deno task run ${url}`
