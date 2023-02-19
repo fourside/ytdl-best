@@ -4,13 +4,13 @@ import { chooseBestId, parse, YoutubeFormat } from "./youtube_format.ts";
 Deno.test("parse audio line webm", () => {
   // arrange
   const line =
-    "249 webm audio only      2 |  754.19KiB    50k https | audio only         opus        50k 48k low, webm_dash";
+    "249-drc webm audio only      2 |  754.19KiB    50k https | audio only         opus        50k 48k low, webm_dash";
   // act
   const result = parse(line);
 
   // assert
   assert(result.type === "audio");
-  assertEquals(result.id, "249");
+  assertEquals(result.id, "249-drc");
   assertEquals(result.extension, "webm");
   assertEquals(result.fileSize, "754.19KiB");
   assertEquals(result.tbr, "50k");
