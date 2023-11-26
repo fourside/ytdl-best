@@ -1,4 +1,3 @@
-const mainCommand = "yt-dlp";
 export class YoutubeDl {
   constructor(
     private readonly url: string,
@@ -9,28 +8,31 @@ export class YoutubeDl {
     { success: false; message: string } | { success: true }
   > {
     const [youtubeDl, ffmpeg] = await Promise.all([
-      runProcess([mainCommand, "--version"], true),
-      runProcess(["ffmpeg", "-version"], true),
+      runCommand("yt-dlp", ["--version"], "null", "null"),
+      runCommand("ffmpeg", ["-version"], "null", "null"),
     ]);
-    if (!youtubeDl.status.success) {
-      return { success: false, message: `${mainCommand} is not in PATH.` };
+    if (!youtubeDl.success) {
+      return { success: false, message: `yt-dlp is not in PATH.` };
     }
-    if (!ffmpeg.status.success) {
+    if (!ffmpeg.success) {
       return { success: false, message: "ffmpeg is not in PATH." };
     }
     return { success: true };
   }
 
   async listFormat(): Promise<string[]> {
-    const listCommand = [mainCommand, "--list-formats", this.url];
+    const commandArgs = ["--list-formats", this.url];
     if (this.cookies) {
-      listCommand.splice(1, 0, "--cookies", this.cookies);
+      commandArgs.splice(1, 0, "--cookies", this.cookies);
     }
-    const { status, stdout, stderr } = await runPipedProcess(listCommand);
+    const { success, stdout, stderr, code } = await runCommand(
+      "yt-dlp",
+      commandArgs,
+    );
 
-    if (!status.success) {
+    if (!success) {
       throw new Error(
-        `list format error. status: ${status.code}, stderr: ${
+        `list format error. status: ${code}, stderr: ${
           new TextDecoder().decode(stderr)
         }`,
       );
@@ -44,45 +46,38 @@ export class YoutubeDl {
   }
 
   async download(videoCode: string, audioCode: string): Promise<void> {
-    const downloadCommand = [
-      mainCommand,
+    const commandArgs = [
       "-f",
       `${videoCode}+${audioCode}`,
       this.url,
     ];
     if (this.cookies) {
-      downloadCommand.splice(1, 0, "--cookies", this.cookies);
+      commandArgs.splice(1, 0, "--cookies", this.cookies);
     }
-    const { status } = await runProcess(downloadCommand, false);
-    if (!status.success) {
+    const { success, code } = await runCommand(
+      "yt-dlp",
+      commandArgs,
+      "inherit",
+      "inherit",
+    );
+    if (!success) {
       throw new Error(
-        `download error. status: ${status.code}`,
+        `download error. status: ${code}`,
       );
     }
   }
 }
 
-async function runProcess(cmd: string[], isDevNull: boolean): Promise<
-  { status: Deno.ProcessStatus }
-> {
-  const process = Deno.run({
-    cmd,
-    stdout: isDevNull ? "null" : "inherit",
-    stderr: isDevNull ? "null" : "inherit",
+async function runCommand(
+  mainCommand: string,
+  commandArgs: string[],
+  stdout: Deno.CommandOptions["stdout"] = "piped",
+  stderr: Deno.CommandOptions["stderr"] = "piped",
+): Promise<Deno.CommandOutput> {
+  const command = new Deno.Command(mainCommand, {
+    args: commandArgs,
+    stdout,
+    stderr,
   });
-  const status = await process.status();
-  return { status };
-}
-
-async function runPipedProcess(cmd: string[]): Promise<
-  { status: Deno.ProcessStatus; stdout: Uint8Array; stderr: Uint8Array }
-> {
-  const process = Deno.run({ cmd, stdout: "piped", stderr: "piped" });
-  const [status, stdout, stderr] = await Promise.all([
-    process.status(),
-    process.output(),
-    process.stderrOutput(),
-  ]);
-  process.close();
-  return { status, stdout, stderr };
+  return await command.output();
 }
