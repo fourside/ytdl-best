@@ -28,6 +28,16 @@ type AudioFormat = {
   moreInfo: string;
 };
 
+type EmptyAudioFormat = {
+  type: "empty-audio";
+  id: string;
+  extension: string;
+  fileSize: 0;
+  proto: string; // m3u8
+  audioCodec: string;
+  moreInfo: string;
+};
+
 type ImageFormat = {
   type: "image";
   id: string;
@@ -38,11 +48,15 @@ type ImageFormat = {
   moreInfo: "storyboard";
 };
 
-export type YoutubeFormat = VideoFormat | AudioFormat | ImageFormat;
+export type YoutubeFormat =
+  | VideoFormat
+  | AudioFormat
+  | ImageFormat
+  | EmptyAudioFormat;
 
 type VideoOrAudioFormat = VideoFormat | AudioFormat;
 
-export function parse(line: string): YoutubeFormat | ImageFormat {
+export function parse(line: string): YoutubeFormat {
   const imageResult = imagePattern.exec(line);
   if (imageResult !== null && imageResult.groups !== undefined) {
     return {
@@ -53,6 +67,18 @@ export function parse(line: string): YoutubeFormat | ImageFormat {
       proto: imageResult.groups["proto"],
       videoCodec: "images",
       moreInfo: "storyboard",
+    };
+  }
+  const emptyAudioResult = emptyAudioOnlyPattern.exec(line);
+  if (emptyAudioResult !== null && emptyAudioResult.groups !== undefined) {
+    return {
+      type: "empty-audio",
+      id: emptyAudioResult.groups["id"],
+      extension: emptyAudioResult.groups["ext"],
+      fileSize: 0,
+      proto: emptyAudioResult.groups["proto"],
+      audioCodec: emptyAudioResult.groups["acodec"],
+      moreInfo: emptyAudioResult.groups["more_info"],
     };
   }
   const audioResult = audioOnlyPattern.exec(line);
@@ -112,15 +138,19 @@ export function parse(line: string): YoutubeFormat | ImageFormat {
 }
 
 const videoPattern = new RegExp(
-  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +(?<ch>\d+?) +\| +~? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +\| (?<vcodec>.+?) +(?<vbr>.+?) +(?<acodec>.+?) +(?<abr>.+?)? +(?<asr>.+?)? +(?<more_info>.+)$/,
+  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +(?<ch>\d+?) +\| +(?:~|≈)? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +\| (?<vcodec>.+?) +(?<vbr>.+?) +(?<acodec>.+?) +(?<abr>.+?)? +(?<asr>.+?)? +(?<more_info>.+)$/,
 );
 
 const videoOnlyPattern = new RegExp(
-  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +\| +~? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +\| (?<vcodec>.+?) +(?<vbr>.+?) +video only +(?<more_info>.+)$/,
+  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +\| +(?:~|≈)? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>.+?) +\| (?<vcodec>.+?) +(?<vbr>.+?) +video only *?(?<more_info>.+)?$/,
 );
 
 const audioOnlyPattern = new RegExp(
   /^(?<id>[-.a-zA-Z0-9]+) +(?<ext>\w+)(:? +audio only)? +(?<ch>\d+?) +\| +(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>\w+) +\| audio only +(?<acodec>.+?) +(?<abr>.+?) +(?<asr>.+?) +(?<more_info>.+)$/,
+);
+
+const emptyAudioOnlyPattern = new RegExp(
+  /^(?<id>[-.a-zA-Z0-9]+) +(?<ext>\w+)(:? +audio only)? +\| +(?<proto>\w+) +\| audio only +(?<acodec>.+?) +(?<more_info>.+)$/,
 );
 
 const imagePattern = new RegExp(
