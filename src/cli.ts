@@ -1,4 +1,4 @@
-import { parse } from "std/flags";
+import { parseArgs as parse } from "std/cli";
 
 import { version } from "./version.ts";
 

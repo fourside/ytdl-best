@@ -5,6 +5,6 @@
   },
   "imports": {
     "std/assert": "https://deno.land/std@0.208.0/assert/mod.ts",
-    "std/flags": "https://deno.land/std@0.208.0/flags/mod.ts"
+    "std/cli": "https://deno.land/std@0.208.0/cli/mod.ts"
   }
 }
