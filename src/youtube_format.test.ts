@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "std/testing";
+import { assert, assertEquals } from "std/assert";
 import { chooseBestId, parse, YoutubeFormat } from "./youtube_format.ts";
 
 Deno.test("parse audio line webm", () => {
