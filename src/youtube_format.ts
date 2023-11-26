@@ -142,7 +142,7 @@ const videoPattern = new RegExp(
 );
 
 const videoOnlyPattern = new RegExp(
-  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +\| +(?:~|≈)? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>.+?) +\| (?<vcodec>.+?) +(?<vbr>.+?) +video only *?(?<more_info>.+)?$/,
+  /^(?<id>\w+) +(?<ext>\w+) +(?<resolution>.+?) +(?<fps>\d+) +\| +(?:~|≈)? *(?<file_size>.+?) +(?<tbr>.+?) +(?<proto>.+?) +\| (?<vcodec>.+?) +(?<vbr>.+?) +video only *(?<more_info>.+)?$/,
 );
 
 const audioOnlyPattern = new RegExp(
